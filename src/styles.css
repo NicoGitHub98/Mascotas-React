@@ -1,0 +1,22 @@
+.global_title {
+  text-align: center;
+}
+.global_content {
+  max-width: 400px;
+}
+
+.people-card{
+  max-width: 75%;
+  margin: auto;
+}
+.people-card-body{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.people-card img{
+  max-width: 20%;
+  border-radius: 50%;
+  display: inline-block;
+}
