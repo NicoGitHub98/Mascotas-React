@@ -1,9 +1,12 @@
 import React from "react"
 import { NavLink } from "react-router-dom"
 import "./Menu.css"
-import { logout } from "../user/userService"
+import { logout, getCurrentUserAsObject } from "../user/userService"
+
 
 export default function MainMenu() {
+  const currentUser = getCurrentUserAsObject();
+
   const logoutApp = async () => {
     await logout()
   }
@@ -18,12 +21,12 @@ export default function MainMenu() {
       <NavLink to="/browsePeople" className="menu_item btn btn-sm btn-link">Buscar Amigos</NavLink><br />
 
       <h6 className="menu_section">Publicaciones</h6>
-      <NavLink to="/feed" className="menu_item btn btn-sm btn-link">Mi Feed</NavLink><br />
+      <NavLink to="/my-feed" className="menu_item btn btn-sm btn-link">Mi Feed</NavLink><br />
       <NavLink to="/feed" className="menu_item btn btn-sm btn-link">Explorar</NavLink><br />
 
       <h6 className="menu_section">Perfil</h6>
       <NavLink to="/profile" className="menu_item btn btn-sm btn-link">Editar</NavLink><br />
-      <NavLink to="/my-feed" className="menu_item btn btn-sm btn-link">Mi Muro</NavLink><br />
+      <NavLink to={"/profile/"+currentUser!.profile} className="menu_item btn btn-sm btn-link">Mi Muro</NavLink><br />
 
       <h6 className="menu_section">Mascotas</h6>
       <NavLink to="/pets" className="menu_item btn btn-sm btn-link">Lista</NavLink><br />

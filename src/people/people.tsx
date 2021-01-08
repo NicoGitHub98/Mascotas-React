@@ -3,12 +3,6 @@ import "../styles.css"
 import * as peopleService from "./peopleService"
 import { useErrorHandler } from "../common/utils/ErrorHandler"
 import { NavLink } from "react-router-dom"
-import { goHome } from "../common/utils/Tools"
-import FormButtonBar from "../common/components/FormButtonBar"
-import FormAcceptButton from "../common/components/FormAcceptButton"
-import FormButton from "../common/components/FormButton"
-import FormTitle from "../common/components/FormTitle"
-import GlobalContent from "../common/components/GlobalContent"
 import { RouteComponentProps } from "react-router-dom"
 import * as userService from "../user/userService"
 
@@ -16,8 +10,8 @@ export default function SearchPeople(props: RouteComponentProps) {
     const [nameToSearch, setNameToSearch] = useState<string>("")
     const [profiles, setProfiles] = useState<peopleService.Profile[]>([])
     const [followedPeople, setFollowedPeople] = useState<string[]>([])
-    const [pageNumber, setPageNumber] = useState<Number>(1)
-    const pageSize = 25;
+    //const [pageNumber, setPageNumber] = useState<Number>(1)
+    //const pageSize = 25;
 
     const errorHandler = useErrorHandler()
 
@@ -66,14 +60,14 @@ export default function SearchPeople(props: RouteComponentProps) {
 
     return (
         <div>
-            <h1 onClick={()=>console.log(followedPeople)}>Descubrir Personas</h1>
+            <h1>Descubrir Personas</h1>
             <form className="" action="" onSubmit={() => loadProfiles(nameToSearch)}>
                 <div className="input-group mb-3">
                     <input type="text" className="form-control" placeholder="Buscar Personas por nombre, apellido o usuario" aria-label="Recipient's username" aria-describedby="button-addon2" value ={nameToSearch} onChange={(event)=> setNameToSearch(event.target.value)} />
-                    <button value="Buscar" className="btn btn-outline-primary" type="submit" id="button-addon2">Buscar <img src="/assets/magnifying-glass.svg" width="15"/></button>
+                    <button value="Buscar" className="btn btn-outline-primary" type="submit" id="button-addon2">Buscar <img src="/assets/magnifying-glass.svg" alt="Buscar" width="15"/></button>
                 </div>
             </form>
-            {profiles.map((profile: peopleService.Profile,index)=>{
+            {profiles.map((profile: peopleService.Profile)=>{
                 return (
                     <PersonCard key={profile._id} profile={profile} isFollowed={()=>checkIfFollowed(profile.user)} follow={handleFollow} unfollow={handleUnfollow}/>
                 )

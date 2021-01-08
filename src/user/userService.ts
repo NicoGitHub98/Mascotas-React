@@ -21,6 +21,10 @@ export function getCurrentUser(): User | undefined {
     return (localStorage.getItem("user") as unknown) as User
 }
 
+export function getCurrentUserAsObject(): User | undefined {
+    return JSON.parse(((localStorage.getItem("user") as unknown) as User).toString())
+}
+
 export async function logout(): Promise<void> {
     localStorage.removeItem("token")
     localStorage.removeItem("user")
@@ -65,6 +69,7 @@ export interface User {
     login: string;
     permissions: string[];
     following: string[];
+    profile: string;
 }
 
 export async function reloadCurrentUser(): Promise<User> {

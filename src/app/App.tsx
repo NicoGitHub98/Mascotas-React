@@ -13,6 +13,8 @@ import "./App.css"
 import Menu from "./Menu"
 import Toolbar from "./Toolbar"
 import People from "../people/people"
+import Feed from "../feed/feed"
+import MyFeed from "../feed/myFeed"
 
 export default function App() {
   return (
@@ -41,6 +43,9 @@ export default function App() {
               <LoggedInRoute path="/editPet" component={NewPet} />
               <LoggedInRoute path="/editPet/:id" component={NewPet} />
               <LoggedInRoute path="/browsePeople" component={People} />
+              <LoggedInRoute path="/profile/:profileId" component={Feed} />
+              <LoggedInRoute path="/my-feed" component={MyFeed} />
+              
             </td>
           </tr>
         </tbody>

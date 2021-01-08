@@ -2,13 +2,15 @@ import axios, { AxiosError } from "axios"
 import { environment } from "../app/environment/environment"
 import { logout } from "../user/userService"
 
-interface Profile {
+export interface Profile {
+    _id: string;
     name: string;
     phone: string;
     email: string;
     address: string;
     province: string;
     picture: string;
+    user: string;
 }
 
 interface UpdateBasicProfile {
@@ -65,5 +67,14 @@ export function getPictureUrl(id: string) {
         return environment.backendUrl + "/v1/image/" + id
     } else {
         return "/assets/profile.png"
+    }
+}
+
+export async function getProfileById(profileId: string){
+    try {
+        const res = (await axios.get(environment.backendUrl + "/v1/profile/"+profileId)).data as Profile
+        return Promise.resolve(res)
+    } catch (error) {
+        return Promise.reject(error)
     }
 }
