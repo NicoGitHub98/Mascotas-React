@@ -2,7 +2,7 @@ import { useState } from "react"
 import { RouteComponentProps } from 'react-router-dom'
 
 export function goHome(props: RouteComponentProps) {
-    props.history.push("/feed")
+    props.history.push("/my-feed")
 }
 
 export function useForceUpdate() {

@@ -1,11 +1,13 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import "../styles.css"
 import * as userService from "../user/userService"
 import * as postService from "./postService"
+import * as petService from "../pets/petsService"
 
 export default function Post(props: any) {
     const [likes, setLikes] = useState(props.publication.likes)
     const currentUser = userService.getCurrentUserAsObject()
+    const [mascotas, setMascotas]: any[] = useState([]);
     
     const handleLike = (event: any, postId: string) => {
         if(event.target.nodeName === "IMG") event.target = event.target.parentNode
@@ -35,19 +37,41 @@ export default function Post(props: any) {
         }
     }
 
+    const loadPetsOfPost = async () => {
+        let mascotasAux = [];
+        for (const mascotaId of props.publication.pets) {
+            mascotasAux.push(await petService.getPet(mascotaId))
+        }
+        setMascotas(mascotasAux)
+    }
+
+    const petsOfPost = () => {
+        let petNames: string[] = [];
+        mascotas.forEach((mascota: any)=>{
+            petNames.push(mascota.name)
+        }) 
+        return (
+            <p className="card-text text-muted ml-5 mt-3">
+                {
+                    (petNames.length===1 ? "-Con mi mascota " : "-Con mis mascotas ") + petNames.join(", ")
+                }
+            </p>
+        )
+    }
+
     const checkLiked = () => {
         return likes.indexOf(currentUser!.id)>-1? "btn-primary" : ""
     }
 
     const checkPeopleThatLikes = () => {
-        console.log("Los likes son: ", likes)
-        console.log("Los el current user es: ", currentUser!.id)
         if(likes.includes(currentUser!.id) && likes.length === 1){
             return "Te gusta esto"
-        } else if(likes.includes(currentUser!.id) && likes.length > 1){
+        } else if(likes.includes(currentUser!.id) && likes.length === 2){
+            return `A ti y a 1 persona les gusta esto`
+        } else if(likes.includes(currentUser!.id) && likes.length > 2) {
             return `A ti y a ${likes.length} personas les gusta esto`
         } else if(likes.length === 1) {
-            return `A ${likes.length} persona le gusta esto`
+            return `A 1 persona le gusta esto`
         } else if(likes.length > 1) {
             return `A ${likes.length} personas les gusta esto`
         } else {
@@ -63,6 +87,10 @@ export default function Post(props: any) {
         }
     }
 
+    useEffect(()=>{
+        loadPetsOfPost();
+    },[])
+
     return (
         <div className="card">
             <div className="card-body">
@@ -74,9 +102,8 @@ export default function Post(props: any) {
                 <p className="card-text">{props.publication.description}</p>
                 <p className="card-text"><small className="text-muted">Publicada el {props.publication.created}</small></p>
             </div>
-            {
-                imageOfPost()
-            }
+            {imageOfPost()}
+            {petsOfPost()}
             <hr/>
             <div>
                 <button 

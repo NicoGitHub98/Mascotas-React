@@ -2,7 +2,6 @@ import React from "react"
 import "../styles.css"
 
 export default function MiniProfile(props: any) {
-    console.log("perfil es: ",props.profile)
     return (
         <div className="card mb-5 mx-auto" style={{width: "18rem"}}>
             <img src={props.profile?props.profile.picture:null} className="card-img-top" alt="..." />
