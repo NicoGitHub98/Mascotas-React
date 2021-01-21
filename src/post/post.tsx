@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react"
+import { NavLink } from "react-router-dom"
 import "../styles.css"
 import * as userService from "../user/userService"
 import * as postService from "./postService"
@@ -82,7 +83,11 @@ export default function Post(props: any) {
     const renderEditButton = ()=>{
         if(props.publication.user === currentUser!.id) {
             return (
-                <span className="btn"><img src="/assets/edit-icon.png" width="20px" alt="Editar"/></span>
+                <NavLink to={"/posts/edit/"+props.publication._id} className="menu_item btn btn-sm btn-link">
+                    <span className="btn">
+                        <img src="/assets/edit-icon.png" width="20px" alt="Editar"/>
+                    </span>
+                </NavLink>
             )
         }
     }

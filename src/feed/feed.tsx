@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react"
+import { NavLink } from "react-router-dom"
 import "../styles.css"
 import MiniProfile from "../profile/MiniProfile"
 import Post from "../post/post"
@@ -46,7 +47,7 @@ export default function Feed(props: RouteComponentProps<{ profileId: string }>) 
         if(profile?.user === currentUser!.id){
             return (
                 <div className="sticky-top mb-2">
-                    <button className="btn btn-primary btn-block">Publicar</button>
+                    <NavLink to="/posts/newPost" className="btn btn-primary btn-block">Publicar</NavLink>
                 </div>
             )
         }
