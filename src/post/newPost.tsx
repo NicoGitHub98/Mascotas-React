@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import AsyncSelect from 'react-select'
+import Select from 'react-select'
 import { useErrorHandler } from "../common/utils/ErrorHandler"
 import { goHome } from "../common/utils/Tools"
 import "../styles.css"
@@ -15,19 +15,19 @@ import FormButton from "../common/components/FormButton"
 import FormWarnButton from "../common/components/FormWarnButton"
 import FormTitle from "../common/components/FormTitle"
 import Form from "../common/components/Form"
-import GlobalContent from "../common/components/GlobalContent"
 import { RouteComponentProps } from "react-router-dom"
 import ErrorLabel from "../common/components/ErrorLabel"
 import { loadPet } from "../pets/petsService"
+import { optionFocusAriaMessage } from "react-select/src/accessibility"
 
-export default function NewPost(props: RouteComponentProps<{ postId: string }>) {
+export default function NewPost(props: RouteComponentProps<{ id: string }>) {
     const currentUser =  getCurrentUserAsObject();
     const [postId, setPostId] = useState("")
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
     const [picture, setPicture] = useState("")
     const [pets, setPets] = useState<Pet[]>([])
-    const [taggedPets, setTaggedPets] = useState([""])
+    const [taggedPets, setTaggedPets] = useState<string[]>([])
     const [selectOptions, setSelectOptions] = useState<any[]>([])
     const [selectedValues, setSelectedValues] = useState<any[]>([])
     const [loaded,setLoaded] = useState(false)
@@ -38,6 +38,7 @@ export default function NewPost(props: RouteComponentProps<{ postId: string }>) 
         if (id) {
             try {
                 const result = await loadPost(id)
+                setPostId(result.id)
                 setTitle(result.title)
                 setDescription(result.description)
                 setPicture(result.picture)
@@ -86,9 +87,9 @@ export default function NewPost(props: RouteComponentProps<{ postId: string }>) 
             if (postId) {
                 await savePost({ id: postId, title, description, picture, pets: taggedPets})
             } else {
-                await newPost({ id: postId, title, description, picture, pets: taggedPets })
+                await newPost({ id: postId, title, description, picture: "", pets: taggedPets })
             }
-            props.history.push("/pets")
+            props.history.push("/profile/"+currentUser?.profile+"#"+postId)
         } catch (error) {
             errorHandler.processRestValidations(error)
         }
@@ -102,29 +103,47 @@ export default function NewPost(props: RouteComponentProps<{ postId: string }>) 
         }
     }
 
-    const handleSelect = (taggedPet:any) => {
-        let taggedPetsAux = taggedPets
-        if(taggedPetsAux.includes(taggedPet)) taggedPetsAux.splice(taggedPetsAux.indexOf(taggedPet),1)
-        else taggedPetsAux.push(taggedPet)
+    const handleSelect = (actualSelections:any) => {
+        let taggedPetsAux = []
+        if(actualSelections){
+            for (const option of actualSelections) {
+                taggedPetsAux.push(option.value)
+            }
+        } 
+        setSelectedValues(actualSelections)
         setTaggedPets(taggedPetsAux)
+
+        //let taggedPetId = taggedPet[0].value
+
+        //let selectedValuesAux = selectedValues
+        //if(taggedPetsAux.includes(taggedPetId)) taggedPetsAux.splice(taggedPetsAux.indexOf(taggedPetId),1)
+        //else taggedPetsAux.push(taggedPetId)
+        //setTaggedPets(taggedPetsAux)
+        //console.log("selectedValues es: ", selectedValuesAux)
+        //let indexOfOption = selectedValuesAux.findIndex(option=>option.value == taggedPetId)
+        //if(indexOfOption>-1){
+        //    console.log("entra por splice")
+        //    selectedValuesAux.splice(indexOfOption,1)
+        //} else {
+        //    console.log("entra por push")
+        //    selectedValuesAux.push(taggedPet[0])
+        //}
+        //setSelectedValues(selectedValuesAux)
     }
 
     const cargarSelectedValues = ()=>{
         let selectedValuesAux: any[] = [];
-        console.log("pets es: ",pets.length)
         for (const pet of pets) {
-            console.log("entra if y taggedPets es: ",taggedPets.length)
             if(taggedPets.includes(pet.id)){
-                selectedValuesAux.push({value: pet.name, label: pet.name})
+                selectedValuesAux.push({value: pet.id, label: pet.name})
             }
         }
-        console.log("las mascotas etiquetadas aux: ", selectedValuesAux.length)
-        //setSelectedValues(selectedValuesAux)
-        return selectedValuesAux
+        setSelectedValues(selectedValuesAux)
     }
 
     useEffect(()=>{
-        const id  = props.match.params.postId
+        const id  = props.match.params.id
+
         if (id && !loaded) {
             void loadPostById(id)
         }
@@ -133,32 +152,18 @@ export default function NewPost(props: RouteComponentProps<{ postId: string }>) 
         }
         if(pets.length && !selectOptions.length){
             let optionsAux:any[] = []
-            pets.forEach((pet)=>{optionsAux.push({value:pet.name,label:pet.name})})
+            pets.forEach((pet)=>{optionsAux.push({value:pet.id,label:pet.name})})
             setSelectOptions(optionsAux)
         }
-        //cargarSelectedValues()
-        console.log("mascotas etiquetadas: ",selectedValues)
         // eslint-disable-next-line
-    }, [pets,selectOptions,taggedPets])
+    }, [pets,taggedPets])
 
-    function renderSelect(){
+    useEffect(()=>{
         if(taggedPets.length && pets.length){
-            return (
-                <AsyncSelect
-                    defaultValue={cargarSelectedValues()}
-                    isMulti
-                    name="mascotas"
-                    options={selectOptions}
-                    className="basic-multi-select"
-                    classNamePrefix="select"
-                    onChange={handleSelect}
-                />
-            )
-        } else {
-            return null
+            cargarSelectedValues()
         }
-        
-    }
+    }, [selectOptions,taggedPets])
+
 
     return (
         <div className="container">
@@ -184,7 +189,16 @@ export default function NewPost(props: RouteComponentProps<{ postId: string }>) 
                     <ErrorLabel message={errorHandler.getErrorText("name")} />
                 </div>
 
-                {renderSelect()}
+                <Select
+                    value={selectedValues}
+                    isMulti
+                    name="mascotas"
+                    options={selectOptions}
+                    className="basic-multi-select"
+                    classNamePrefix="select"
+                    onChange={handleSelect}
+                />
+
                 <br/>
 
                 <DangerLabel message={errorHandler.errorMessage} />
@@ -201,23 +215,3 @@ export default function NewPost(props: RouteComponentProps<{ postId: string }>) 
         </div>
     )
 }
-
-/*
-                <FormInput
-                    label="Descripción"
-                    name="description"
-                    value={description}
-                    onChange={event => setDescription(event.target.value)}
-                    errorHandler={errorHandler} />
-
-                    <div className="form-group">
-                        <label htmlFor="tag-pets" className="form-label">Etiquete a sus mascotas</label><br/>
-                        <select className="form-select" name="tag-pets" multiple aria-label="multiple select example">
-                            { 
-                                pets.map((pet)=>{
-                                    return <option key={pet.id} value={pet.id} selected={taggedPets.includes(pet.id)?true:false}>{pet.name}</option>
-                                }) 
-                            }
-                        </select>
-                    </div>
-*/

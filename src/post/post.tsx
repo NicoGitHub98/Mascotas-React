@@ -47,17 +47,20 @@ export default function Post(props: any) {
     }
 
     const petsOfPost = () => {
-        let petNames: string[] = [];
-        mascotas.forEach((mascota: any)=>{
-            petNames.push(mascota.name)
-        }) 
-        return (
-            <p className="card-text text-muted ml-5 mt-3">
-                {
-                    (petNames.length===1 ? "-Con mi mascota " : "-Con mis mascotas ") + petNames.join(", ")
-                }
-            </p>
-        )
+        if(mascotas.length){
+            let petNames: string[] = [];
+            mascotas.forEach((mascota: any)=>{
+                petNames.push(mascota.name)
+            }) 
+            return (
+                <p className="card-text text-muted ml-5 mt-3">
+                    {
+                        (petNames.length===1 ? "-Con mi mascota " : "-Con mis mascotas ") + petNames.join(", ")
+                    }
+                </p>
+            )
+        }
+        return null
     }
 
     const checkLiked = () => {
@@ -94,18 +97,19 @@ export default function Post(props: any) {
 
     useEffect(()=>{
         loadPetsOfPost();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
 
     return (
-        <div className="card">
+        <div className="card my-4 shadow" id={props.publication._id}>
             <div className="card-body">
-                <div className="d-flex justify-content-between">
-                    <h5 className="card-title">{props.publication.title}</h5>
+                <div className="d-flex justify-content-between align-items-center">
+                    <h5>{props.publication.title}</h5>
                     {renderEditButton()}
                 </div>
+                <div><small style={{"fontSize":12}} className="text-muted">Publicada el {props.publication.created}</small></div>
                 <hr/>
                 <p className="card-text">{props.publication.description}</p>
-                <p className="card-text"><small className="text-muted">Publicada el {props.publication.created}</small></p>
             </div>
             {imageOfPost()}
             {petsOfPost()}

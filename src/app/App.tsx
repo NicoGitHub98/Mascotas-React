@@ -47,7 +47,7 @@ export default function App() {
               <LoggedInRoute path="/profile/:profileId" component={Feed} />
               <LoggedInRoute path="/my-feed" component={MyFeed} />
               <LoggedInRoute path="/posts/newPost" component={newPost} />
-              <LoggedInRoute path="/posts/edit/:postId" component={newPost} />
+              <LoggedInRoute path="/posts/edit/:id" component={newPost} />
             </td>
           </tr>
         </tbody>
