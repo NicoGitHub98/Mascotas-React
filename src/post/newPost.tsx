@@ -17,8 +17,6 @@ import FormTitle from "../common/components/FormTitle"
 import Form from "../common/components/Form"
 import { RouteComponentProps } from "react-router-dom"
 import ErrorLabel from "../common/components/ErrorLabel"
-import { loadPet } from "../pets/petsService"
-import { optionFocusAriaMessage } from "react-select/src/accessibility"
 
 export default function NewPost(props: RouteComponentProps<{ id: string }>) {
     const currentUser =  getCurrentUserAsObject();
@@ -31,6 +29,7 @@ export default function NewPost(props: RouteComponentProps<{ id: string }>) {
     const [selectOptions, setSelectOptions] = useState<any[]>([])
     const [selectedValues, setSelectedValues] = useState<any[]>([])
     const [loaded,setLoaded] = useState(false)
+    const [loadingSave, setLoadingSave] = useState(false)
 
     const errorHandler = useErrorHandler()
 
@@ -85,9 +84,12 @@ export default function NewPost(props: RouteComponentProps<{ id: string }>) {
 
         try {
             if (postId) {
+                setLoadingSave(true)
                 await savePost({ id: postId, title, description, picture, pets: taggedPets})
+                setLoadingSave(false)
             } else {
-                await newPost({ id: postId, title, description, picture: "", pets: taggedPets })
+
+                await newPost({ id: postId, title, description, picture: picture, pets: taggedPets })
             }
             props.history.push("/profile/"+currentUser?.profile+"#"+postId)
         } catch (error) {
@@ -113,22 +115,6 @@ export default function NewPost(props: RouteComponentProps<{ id: string }>) {
         setSelectedValues(actualSelections)
         setTaggedPets(taggedPetsAux)
 
-        //let taggedPetId = taggedPet[0].value
-
-        //let selectedValuesAux = selectedValues
-        //if(taggedPetsAux.includes(taggedPetId)) taggedPetsAux.splice(taggedPetsAux.indexOf(taggedPetId),1)
-        //else taggedPetsAux.push(taggedPetId)
-        //setTaggedPets(taggedPetsAux)
-        //console.log("selectedValues es: ", selectedValuesAux)
-        //let indexOfOption = selectedValuesAux.findIndex(option=>option.value == taggedPetId)
-        //if(indexOfOption>-1){
-        //    console.log("entra por splice")
-        //    selectedValuesAux.splice(indexOfOption,1)
-        //} else {
-        //    console.log("entra por push")
-        //    selectedValuesAux.push(taggedPet[0])
-        //}
-        //setSelectedValues(selectedValuesAux)
     }
 
     const cargarSelectedValues = ()=>{
@@ -162,13 +148,14 @@ export default function NewPost(props: RouteComponentProps<{ id: string }>) {
         if(taggedPets.length && pets.length){
             cargarSelectedValues()
         }
+        // eslint-disable-next-line
     }, [selectOptions,taggedPets])
 
 
     return (
         <div className="container">
-            <FormTitle>Nueva Publicacion</FormTitle>
-
+            <FormTitle >Nueva Publicacion</FormTitle>
+            <div><button className="btn btn-secondary" onClick={()=>console.log("la imagen es: ",picture)}>Probar</button></div>
             <Form>
                 <FormInput
                     label="Title"
@@ -204,7 +191,11 @@ export default function NewPost(props: RouteComponentProps<{ id: string }>) {
                 <DangerLabel message={errorHandler.errorMessage} />
 
                 <FormButtonBar>
-                    <FormAcceptButton label="Guardar" onClick={saveClick} />
+                    {
+                        loadingSave?
+                        <button disabled className="btn btn-primary"><img className="loadingIcon" src="/assets/loadingAnimationIcon.svg" alt=""/></button> :
+                        <FormAcceptButton label="Guardar" onClick={saveClick} />
+                    }
 
                     <FormWarnButton hidden={!postId} label="Eliminar" onClick={deleteClick} />
 

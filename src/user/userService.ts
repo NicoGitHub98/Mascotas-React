@@ -22,7 +22,8 @@ export function getCurrentUser(): User | undefined {
 }
 
 export function getCurrentUserAsObject(): User | undefined {
-    return JSON.parse(((localStorage.getItem("user") as unknown) as User).toString())
+    let currentUser = ((localStorage.getItem("user") as unknown) as User)
+    if(currentUser) return JSON.parse(currentUser.toString())
 }
 
 export async function logout(): Promise<void> {

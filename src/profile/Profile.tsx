@@ -97,6 +97,7 @@ export default function Profile(props: RouteComponentProps) {
     useEffect(() => {
         void loadProvinces()
         void loadProfile()
+        // eslint-disable-next-line
     }, [])
 
     return (

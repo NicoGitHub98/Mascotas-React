@@ -4,11 +4,26 @@ import "../styles.css"
 import * as userService from "../user/userService"
 import * as postService from "./postService"
 import * as petService from "../pets/petsService"
+import * as profileService from "../profile/profileService"
 
-export default function Post(props: any) {
+interface postProps{
+    publication:{
+        _id: string,
+        title: string,
+        description: string,
+        user: string,
+        picture: string,
+        likes: string[],
+        pets: string[],
+        created: string,
+    }
+}
+
+export default function Post(props: postProps) {
     const [likes, setLikes] = useState(props.publication.likes)
     const currentUser = userService.getCurrentUserAsObject()
     const [mascotas, setMascotas]: any[] = useState([]);
+    const [profileInfo, setProfileInfo] = useState<any>()
     
     const handleLike = (event: any, postId: string) => {
         if(event.target.nodeName === "IMG") event.target = event.target.parentNode
@@ -44,6 +59,10 @@ export default function Post(props: any) {
             mascotasAux.push(await petService.getPet(mascotaId))
         }
         setMascotas(mascotasAux)
+    }
+
+    const  loadProfileInfo = async ()=>{
+        setProfileInfo(await profileService.getProfileByUserId(props.publication.user))
     }
 
     const petsOfPost = () => {
@@ -97,6 +116,7 @@ export default function Post(props: any) {
 
     useEffect(()=>{
         loadPetsOfPost();
+        loadProfileInfo();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
 
@@ -107,7 +127,11 @@ export default function Post(props: any) {
                     <h5>{props.publication.title}</h5>
                     {renderEditButton()}
                 </div>
-                <div><small style={{"fontSize":12}} className="text-muted">Publicada el {props.publication.created}</small></div>
+                <div>
+                    <small style={{"fontSize":12}} className="text-muted">
+                        Publicada el {props.publication.created} por <NavLink to={"/profile/"+profileInfo?._id}>{profileInfo?.name}</NavLink>
+                    </small>
+                </div>
                 <hr/>
                 <p className="card-text">{props.publication.description}</p>
             </div>

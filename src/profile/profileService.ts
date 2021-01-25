@@ -78,3 +78,12 @@ export async function getProfileById(profileId: string){
         return Promise.reject(error)
     }
 }
+
+export async function getProfileByUserId(userId: string){
+    try {
+        const res = (await axios.get(environment.backendUrl + "/v1/profiles/"+userId)).data as Profile
+        return Promise.resolve(res)
+    } catch (error) {
+        return Promise.reject(error)
+    }
+}

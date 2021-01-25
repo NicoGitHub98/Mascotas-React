@@ -5,13 +5,13 @@ import { useErrorHandler } from "../common/utils/ErrorHandler"
 import { NavLink } from "react-router-dom"
 import { RouteComponentProps } from "react-router-dom"
 import * as userService from "../user/userService"
+import InfiniteScroll from "react-infinite-scroller"
 
 export default function SearchPeople(props: RouteComponentProps) {
     const [nameToSearch, setNameToSearch] = useState<string>("")
     const [profiles, setProfiles] = useState<peopleService.Profile[]>([])
     const [followedPeople, setFollowedPeople] = useState<string[]>([])
-    //const [pageNumber, setPageNumber] = useState<Number>(1)
-    //const pageSize = 25;
+    const [profilesToShow, SetProfilesToShow] = useState(20)
 
     const errorHandler = useErrorHandler()
 
@@ -54,6 +54,15 @@ export default function SearchPeople(props: RouteComponentProps) {
         return ((index > -1) ? true : false)
     }
 
+    const renderPeopleToShow = () => {
+        let profilesToRender = profiles.filter((x, idx) => (idx <= profilesToShow))
+        return profilesToRender.map((profile: peopleService.Profile)=>{
+            return (
+                <PersonCard key={profile._id} profile={profile} isFollowed={()=>checkIfFollowed(profile.user)} follow={handleFollow} unfollow={handleUnfollow}/>
+            )
+        })
+    }
+
     useEffect(() => {
         loadFollowedPeople();
       },[]);
@@ -67,12 +76,16 @@ export default function SearchPeople(props: RouteComponentProps) {
                     <button value="Buscar" className="btn btn-outline-primary" type="submit" id="button-addon2">Buscar <img src="/assets/magnifying-glass.svg" alt="Buscar" width="15"/></button>
                 </div>
             </form>
-            {profiles.map((profile: peopleService.Profile)=>{
-                return (
-                    <PersonCard key={profile._id} profile={profile} isFollowed={()=>checkIfFollowed(profile.user)} follow={handleFollow} unfollow={handleUnfollow}/>
-                )
-            })}
-            <ButtonGroup/>
+            <InfiniteScroll
+                className=""
+                key={0}
+                pageStart={0}
+                loadMore={() => SetProfilesToShow(profilesToShow + 2)}
+                hasMore={profilesToShow <= profiles.length}
+                loader={<div className={"spin-loader-more-container"}><img src="/assets/loadingAnimationIcon.svg" alt="Loading Icon"></img></div>}
+            >
+                {renderPeopleToShow()}
+            </InfiniteScroll>
         </div>
     )
 }
@@ -100,19 +113,6 @@ export function PersonCard(props: any) {
                     ? <button className="btn btn-primary" onClick={()=>{unfollow(user);}}>Dejar de Seguir</button> 
                     : <button className="btn btn border border-primary" onClick={()=>{follow(user)}}>Seguir</button>
                 }
-            </div>
-        </div>
-    )
-}
-
-export function ButtonGroup(props: any) {
-    return(
-        <div className="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-            <div className="btn-group me-2 m-auto" role="group" aria-label="First group">
-                <button type="button" className="btn btn-primary">1</button>
-                <button type="button" className="btn btn-primary">2</button>
-                <button type="button" className="btn btn-primary">3</button>
-                <button type="button" className="btn btn-primary">4</button>
             </div>
         </div>
     )
