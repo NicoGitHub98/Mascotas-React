@@ -19,3 +19,12 @@ export async function getMyFeed(): Promise<any[]> {
         return Promise.reject(err)
     }
 }
+
+export async function exploreFeed(likes: Number): Promise<any[]> {
+    try {
+        const res = (await axios.get(environment.backendUrl + "/v1/explore?likes="+likes)).data as any[]
+        return Promise.resolve(res)
+    } catch (err) {
+        return Promise.reject(err)
+    }
+}

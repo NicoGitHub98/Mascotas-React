@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react"
 import "../styles.css"
 import Post from "../post/post"
-//import * as profileService from "../profile/profileService"
 import * as feedService from "./feedService"
 import { getCurrentUserAsObject } from "../user/userService"
-import { NavLink, RouteComponentProps } from "react-router-dom"
+import { RouteComponentProps } from "react-router-dom"
 import InfiniteScroll from "react-infinite-scroller"
 
 interface Publication {
@@ -19,19 +18,19 @@ interface Publication {
     user: string;
 }
 
-export default function MyFeed(props: RouteComponentProps) {
+export default function Explore(props: RouteComponentProps) {
     const [publications,setPublications] = useState<Publication[]>([])
     const [currentUser,setCurrentUser] = useState<any>({});
     const [postsToShow, setPostsToShow] = useState(2)
     
-    const getPublications = async (userId: string) => {
-        const publicationsAux = await feedService.getMyFeed()
+    const getPublications = async () => {
+        const publicationsAux = await feedService.exploreFeed(2)
         setPublications(publicationsAux)
     }
 
     useEffect(()=>{
         if(!currentUser) setCurrentUser(getCurrentUserAsObject())
-        getPublications(currentUser!.id);
+        getPublications();
     },[currentUser])
     
     const renderPublications = () => {
@@ -46,26 +45,21 @@ export default function MyFeed(props: RouteComponentProps) {
         } else if(publications.length === 0){
             return (
                 <div>
-                    <h5 className="text-center">No Hay Publicaciones para Mostrar</h5>
-                    <div className="text-center">
-                        <NavLink to="/browsePeople">
-                            <small>Sigue a Alguien para ver Publicaciones</small>
-                        </NavLink>
-                    </div>
+                    <h5 className="text-center">No Hay Publicaciones Destacadas Aún</h5>
                 </div>
             )
         }
     }
 
     return (
-        <div style={{overflow: "hidden"}}>
+        <div style={{overflowY: "hidden"}}>
             <InfiniteScroll
                 className=""
                 key={0}
                 pageStart={0}
                 loadMore={() => setPostsToShow(postsToShow + 2)}
                 hasMore={postsToShow <= publications.length}
-                loader={<div key={0} className={"spin-loader-more-container"}><img src="/assets/loadingAnimationIcon.svg" alt="Loading Icon"></img></div>}
+                loader={<div className={"spin-loader-more-container"}><img src="/assets/loadingAnimationIcon.svg" alt="Loading Icon"></img></div>}
             >
             {
                 renderPublications()    

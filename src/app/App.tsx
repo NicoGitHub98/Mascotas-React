@@ -16,6 +16,7 @@ import People from "../people/people"
 import Feed from "../feed/feed"
 import MyFeed from "../feed/myFeed"
 import newPost from "../post/newPost"
+import Explore from "../feed/explore"
 
 export default function App() {
   return (
@@ -48,6 +49,7 @@ export default function App() {
               <LoggedInRoute path="/my-feed" component={MyFeed} />
               <LoggedInRoute path="/posts/newPost" component={newPost} />
               <LoggedInRoute path="/posts/edit/:id" component={newPost} />
+              <LoggedInRoute path="/explore-feed" component={Explore} />
             </td>
           </tr>
         </tbody>

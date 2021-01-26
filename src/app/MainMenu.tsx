@@ -22,7 +22,7 @@ export default function MainMenu() {
 
       <h6 className="menu_section">Publicaciones</h6>
       <NavLink to="/my-feed" className="menu_item btn btn-sm btn-link">Mi Feed</NavLink><br />
-      <NavLink to="/feed" className="menu_item btn btn-sm btn-link">Explorar</NavLink><br />
+      <NavLink to="/explore-feed" className="menu_item btn btn-sm btn-link">Explorar</NavLink><br />
 
       <h6 className="menu_section">Perfil</h6>
       <NavLink to="/profile" className="menu_item btn btn-sm btn-link">Editar</NavLink><br />

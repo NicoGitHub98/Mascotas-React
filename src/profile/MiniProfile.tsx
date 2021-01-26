@@ -1,4 +1,5 @@
 import React from "react"
+import { NavLink } from "react-router-dom"
 import "../styles.css"
 
 export default function MiniProfile(props: any) {
@@ -11,7 +12,7 @@ export default function MiniProfile(props: any) {
                     <h5 className="card-title">{props.profile?props.profile.address:null}</h5>
                     <h5 className="card-title">{props.profile?props.profile.phone:null}</h5>
                 </div>
-                <span className="float-right btn"><img src="/assets/edit-icon.png" width="20px" alt="Editar"/></span>
+                <NavLink to="/profile"><span className="float-right btn"><img src="/assets/edit-icon.png" width="20px" alt="Editar"/></span></NavLink>
             </div>
         </div>
     )

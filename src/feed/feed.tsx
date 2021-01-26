@@ -50,7 +50,7 @@ export default function Feed(props: RouteComponentProps<{ profileId: string }>) 
     const renderPostButton = ()=>{
         if(profile?.user === currentUser?.id){
             return (
-                <div className=" mb-2" style={{position: "sticky", top: 0}}>
+                <div className=" mb-2 sticky-top stickyButton">
                     <NavLink to="/posts/newPost" className="btn btn-primary btn-block">Publicar</NavLink>
                 </div>
             )

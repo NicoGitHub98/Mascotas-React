@@ -10,7 +10,6 @@
   padding-top: 20px;
   padding-bottom: 20px;
   padding-right: 20px;
-  overflow-y: scroll;
   vertical-align: top;
 }
 
@@ -20,4 +19,8 @@
 
 .app_menu {
   width: 150px;
+}
+
+.stickyButton {
+  top: 10px
 }

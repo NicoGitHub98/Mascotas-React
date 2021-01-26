@@ -155,10 +155,9 @@ export default function NewPost(props: RouteComponentProps<{ id: string }>) {
     return (
         <div className="container">
             <FormTitle >Nueva Publicacion</FormTitle>
-            <div><button className="btn btn-secondary" onClick={()=>console.log("la imagen es: ",picture)}>Probar</button></div>
             <Form>
                 <FormInput
-                    label="Title"
+                    label="Titulo"
                     name="title"
                     value={title}
                     onChange={event => setTitle(event.target.value)}
@@ -175,17 +174,18 @@ export default function NewPost(props: RouteComponentProps<{ id: string }>) {
                         onChange={uploadPicture} />
                     <ErrorLabel message={errorHandler.getErrorText("name")} />
                 </div>
-
-                <Select
-                    value={selectedValues}
-                    isMulti
-                    name="mascotas"
-                    options={selectOptions}
-                    className="basic-multi-select"
-                    classNamePrefix="select"
-                    onChange={handleSelect}
-                />
-
+                <div>
+                    Mascotas Etiquetadas
+                    <Select
+                        value={selectedValues}
+                        isMulti
+                        name="mascotas"
+                        options={selectOptions}
+                        className="basic-multi-select"
+                        classNamePrefix="select"
+                        onChange={handleSelect}
+                    />
+                </div>
                 <br/>
 
                 <DangerLabel message={errorHandler.errorMessage} />
