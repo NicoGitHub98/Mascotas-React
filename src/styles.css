@@ -28,3 +28,14 @@
 .loadingIcon{
   max-width: 30px;
 }
+
+.mascotasTitle {
+  background: rgb(2,0,36);
+  background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,121,108,1) 0%, rgba(0,185,255,1) 66%);
+}
+
+.animationMascotas {
+  transition:height 1s ease-out;
+  height: 0px;
+  overflow:hidden;
+}

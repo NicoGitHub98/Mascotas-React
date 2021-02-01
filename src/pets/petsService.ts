@@ -8,6 +8,15 @@ export interface Pet {
     description: string;
 }
 
+export async function loadPetsOfUser(userId: string): Promise<Pet[]> {
+    try {
+        const res = (await axios.get(environment.backendUrl + "/v1/"+userId+"/pets")).data as Pet[]
+        return Promise.resolve(res)
+    } catch (err) {
+        return Promise.reject(err)
+    }
+}
+
 export async function loadPets(): Promise<Pet[]> {
     try {
         const res = (await axios.get(environment.backendUrl + "/v1/pet")).data as Pet[]
