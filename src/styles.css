@@ -35,7 +35,16 @@
 }
 
 .animationMascotas {
-  transition:height 1s ease-out;
-  height: 0px;
+  transition: max-height 0.7s ease;
+  max-height: 0px;
   overflow:hidden;
+}
+
+.tableFixHead { 
+  overflow-y: auto; 
+  height: 150px; 
+}
+.tableFixHead thead th { 
+  position: sticky; 
+  top: 0; 
 }

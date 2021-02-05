@@ -1,25 +1,19 @@
-import React, { useState, useEffect, FormEvent } from "react"
+import React, { useState, FormEvent } from "react"
 import "../styles.css"
 import * as peopleService from "./peopleService"
 import { useErrorHandler } from "../common/utils/ErrorHandler"
 import { NavLink } from "react-router-dom"
 import { RouteComponentProps } from "react-router-dom"
-import * as userService from "../user/userService"
 import InfiniteScroll from "react-infinite-scroller"
 import ErrorLabel from "../common/components/ErrorLabel"
+import { FollowButton } from "../common/components/FollowButton"
 
 export default function SearchPeople(props: RouteComponentProps) {
     const [nameToSearch, setNameToSearch] = useState<string>("")
     const [profiles, setProfiles] = useState<peopleService.Profile[]>([])
-    const [followedPeople, setFollowedPeople] = useState<string[]>([])
     const [profilesToShow, setProfilesToShow] = useState(20)
 
     const errorHandler = useErrorHandler()
-
-    const loadFollowedPeople = async () => {
-        const currentUser = await userService.reloadCurrentUser();
-        setFollowedPeople(currentUser.following)
-    }
 
     const loadProfiles = async (name: string) => {
         try {
@@ -30,36 +24,11 @@ export default function SearchPeople(props: RouteComponentProps) {
         }
     }
 
-    const handleFollow = async (userId: string) => {
-        try {
-            await peopleService.follow(userId)
-            const currentUser = await userService.reloadCurrentUser();
-            setFollowedPeople(currentUser.following)
-        } catch (error) {
-            errorHandler.processRestValidations(error)
-        }
-    }
-
-    const handleUnfollow = async (userId: string) => {
-        try {
-            await peopleService.unfollow(userId)
-            const currentUser = await userService.reloadCurrentUser();
-            setFollowedPeople(currentUser.following)
-        } catch (error) {
-            errorHandler.processRestValidations(error)
-        }
-    }
-
-    const checkIfFollowed = (userId: string): boolean => {
-        var index = followedPeople.indexOf(userId);
-        return ((index > -1) ? true : false)
-    }
-
     const renderPeopleToShow = () => {
         let profilesToRender = profiles.filter((x, idx) => (idx <= profilesToShow))
         return profilesToRender.map((profile: peopleService.Profile)=>{
             return (
-                <PersonCard key={profile._id} profile={profile} isFollowed={()=>checkIfFollowed(profile.user)} follow={handleFollow} unfollow={handleUnfollow}/>
+                <PersonCard key={profile._id} profile={profile}/>
             )
         })
     }
@@ -74,10 +43,6 @@ export default function SearchPeople(props: RouteComponentProps) {
         loadProfiles(nameToSearch)
 
     }
-
-    useEffect(() => {
-        loadFollowedPeople();
-      },[]);
 
     return (
         <div>
@@ -104,17 +69,6 @@ export default function SearchPeople(props: RouteComponentProps) {
 }
 
 export function PersonCard(props: any) {
-    const [isFollowed,setIsFollowed] = useState<boolean>(props.isFollowed)
-    const user = props.profile.user
-
-    const follow = (userId: string)=>{
-        setIsFollowed(true)
-        props.follow(userId);
-    }
-    const unfollow = (userId: string)=>{
-        setIsFollowed(false)
-        props.unfollow(userId);
-    }
 
     return (
         <div className="card mb-3 people-card">
@@ -122,9 +76,7 @@ export function PersonCard(props: any) {
                 <img src={props.profile.picture} className="" alt="..."/>
                 <NavLink to={"/profile/"+props.profile._id} className="menu_item h5">{props.profile.name}</NavLink>
                 {
-                    isFollowed 
-                    ? <button className="btn btn-primary" onClick={()=>{unfollow(user);}}>Dejar de Seguir</button> 
-                    : <button className="btn btn border border-primary" onClick={()=>{follow(user)}}>Seguir</button>
+                    <FollowButton key={props.profile._id} user={props.profile.user}/>
                 }
             </div>
         </div>

@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom"
 import {getCurrentUserAsObject} from "../user/userService"
 import { loadPetsOfUser } from "../pets/petsService"
 import "../styles.css"
+import { FollowButton } from "../common/components/FollowButton"
 
 interface MiniProfileProps{
     profile: {
@@ -19,7 +20,8 @@ interface MiniProfileProps{
 export default  function MiniProfile(props: any) {
     const [currentUser,setCurrentUser] = useState<any>()
     const [pets, setPets] = useState<any[]>()
-    const [petsVisible, setPetsVisible] = useState(false)
+    const [petsVisible,setPetsVisible] = useState(false)
+    const [prof, setProf] = useState<string>()
     let panelMascotas = useRef<HTMLDivElement>(null)
 
     const loadCurrentUser = ()=>{
@@ -30,10 +32,22 @@ export default  function MiniProfile(props: any) {
         setPets(await loadPetsOfUser(props.profile?.user))
     }    
 
+    const changePetFrameVisibility = ()=>{
+        console.log("Entro aca",petsVisible)
+        setPetsVisible(false)
+    }
+
     const togglePetsVisible = ()=>{
-        setPetsVisible(!petsVisible)
+        console.log(petsVisible)
         const node = panelMascotas.current as any
-        node.style.height = "400px"
+        if(!petsVisible){
+            setPetsVisible(true)
+            setTimeout(()=>(node.style.maxHeight = "350px"),50)
+        } else {
+            setTimeout(()=>{changePetFrameVisibility()},700);
+            node.style.maxHeight = "0px"
+        }
+        
     }
 
     const renderEditButton = () =>{
@@ -45,7 +59,7 @@ export default  function MiniProfile(props: any) {
                     </span>
                 </NavLink>
             )
-        } else return null
+        } else return <FollowButton key={props.profile?._id} float={true} user={prof}/> 
     }
 
     const renderProfile = ()=>{
@@ -67,38 +81,49 @@ export default  function MiniProfile(props: any) {
             return (
                 <div ref={panelMascotas} className="card my-2 animationMascotas" hidden={!petsVisible}>
                     <div className="card-header text-center text-bold mascotasTitle"><strong>Mis Mascotas</strong></div>
-                    <div className="card-body">
-                    <table className="table table-sm table-hover">
-                        <thead>
-                            <tr>
-                                <th scope="col">Nombre</th>
-                                <th scope="col">Descripcion</th>
-                                <th scope="col">Cumpleaños</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {pets.map((pet:any,index)=>{
-                                return (
-                                    <tr key={index}>
-                                        <th scope="row">{pet.name}</th>
-                                        <td>{pet.description}</td>
-                                        <td>{pet.birthDate.slice(0,10)}</td>
-                                    </tr>
-                                )
-                            })}
-                        </tbody>
-                    </table>
+                    <div className="card-body ">
+                        <div className="tableFixHead">
+                        <table className="table table-sm table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col" className="bg-secondary">Nombre</th>
+                                    <th scope="col" className="bg-secondary">Descripcion</th>
+                                    <th scope="col" className="bg-secondary">Cumpleaños</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {pets.map((pet:any,index)=>{
+                                    return (
+                                        <tr key={index}>
+                                            <th scope="row">{pet.name}</th>
+                                            <td>{pet.description}</td>
+                                            <td>{pet.birthDate.slice(0,10)}</td>
+                                        </tr>
+                                    )
+                                })}
+                            </tbody>
+                        </table>
+                        </div>
+                        
                     </div>
                 </div>
             )
         } else {
-            return <h5 hidden={!petsVisible}>Aun no tengo mascotas!</h5>
+            return (
+                <div ref={panelMascotas} className="card my-2" hidden={!petsVisible}>
+                    <div className="card-header text-center text-bold mascotasTitle"><strong>Mis Mascotas</strong></div>
+                    <div className="card-body">
+                        <h5 hidden={!petsVisible} className="text-center">Aun no tengo mascotas!</h5>
+                    </div>
+                </div>
+            )
         }
     }
 
     useEffect(()=>{
         if(!currentUser) loadCurrentUser()
         if(!pets && props.profile)loadUserPets()
+        if(props.profile)setProf(props.profile.user)
         // eslint-disable-next-line
     },[props.profile])
 

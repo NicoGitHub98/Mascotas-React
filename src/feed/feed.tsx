@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import { NavLink } from "react-router-dom"
 import "../styles.css"
 import MiniProfile from "../profile/MiniProfile"
@@ -26,6 +26,7 @@ export default function Feed(props: RouteComponentProps<{ profileId: string }>) 
     const [publications,setPublications] = useState<Publication[]>([])
     const [postsToShow, setPostsToShow] = useState(20)
     const [currentUser,setCurrentUser] = useState<any>();
+    const prevProfileId = useRef<string>()
 
     const getProfile = async (profileId: string) => {
         const profileAux = await profileService.getProfileById(profileId);
@@ -38,6 +39,7 @@ export default function Feed(props: RouteComponentProps<{ profileId: string }>) 
     }
 
     useEffect(()=>{
+        prevProfileId.current = props.match.params.profileId
         if(!currentUser) setCurrentUser(getCurrentUserAsObject())
         if(!profile){
             getProfile(props.match.params.profileId);
@@ -46,6 +48,12 @@ export default function Feed(props: RouteComponentProps<{ profileId: string }>) 
         }
         // eslint-disable-next-line
     },[profile,currentUser])
+
+    useEffect(()=>{
+        console.log("Se Ejecuta el cambio en parametro ProfileId")
+        if(profile)setProfile(undefined)
+        if(prevProfileId.current == props.match.params.profileId) window.scrollTo(0, 0)
+    },[props.match.params.profileId])
 
     const renderPostButton = ()=>{
         if(profile?.user === currentUser?.id){
@@ -72,7 +80,7 @@ export default function Feed(props: RouteComponentProps<{ profileId: string }>) 
     
     return (
         <div>
-            <MiniProfile profile={profile}/>
+            {profile?<MiniProfile profile={profile}/>:null}
             {renderPostButton()}
             <InfiniteScroll
                 className=""
