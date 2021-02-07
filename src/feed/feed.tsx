@@ -67,14 +67,19 @@ export default function Feed(props: RouteComponentProps<{ profileId: string }>) 
 
     const renderPosts = ()=>{
         const postsToRender:any = publications.filter((x, idx) => (idx <= postsToShow))
-        return postsToRender.map((publication: Publication) => {
-            return (
-                <Post 
-                    key={publication._id}
-                    publication={publication}
-                />
-            )
-        })
+        if(postsToRender.length){
+            return postsToRender.map((publication: Publication) => {
+                return (
+                    <Post 
+                        key={publication._id}
+                        publication={publication}
+                    />
+                )
+            })
+        } else {
+            return <h5 className="text-center mt-5">Este usuario aun no tiene Publicaciones</h5>
+        }
+        
     }
     
     

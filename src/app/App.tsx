@@ -17,6 +17,7 @@ import Feed from "../feed/feed"
 import MyFeed from "../feed/myFeed"
 import newPost from "../post/newPost"
 import Explore from "../feed/explore"
+import MyPeople from "../people/myPeople"
 
 export default function App() {
   return (
@@ -45,6 +46,7 @@ export default function App() {
               <LoggedInRoute path="/editPet" component={NewPet} />
               <LoggedInRoute path="/editPet/:id" component={NewPet} />
               <LoggedInRoute path="/browsePeople" component={People} />
+              <LoggedInRoute path="/my-following" component={MyPeople} />
               <LoggedInRoute path="/profile/:profileId" component={Feed} />
               <LoggedInRoute path="/my-feed" component={MyFeed} />
               <LoggedInRoute path="/posts/newPost" component={newPost} />

@@ -7,6 +7,7 @@ import { RouteComponentProps } from "react-router-dom"
 import InfiniteScroll from "react-infinite-scroller"
 import ErrorLabel from "../common/components/ErrorLabel"
 import { FollowButton } from "../common/components/FollowButton"
+import PersonCard from "./personCard"
 
 export default function SearchPeople(props: RouteComponentProps) {
     const [nameToSearch, setNameToSearch] = useState<string>("")
@@ -68,17 +69,3 @@ export default function SearchPeople(props: RouteComponentProps) {
     )
 }
 
-export function PersonCard(props: any) {
-
-    return (
-        <div className="card mb-3 people-card">
-            <div className="card-body people-card-body">
-                <img src={props.profile.picture} className="" alt="..."/>
-                <NavLink to={"/profile/"+props.profile._id} className="menu_item h5">{props.profile.name}</NavLink>
-                {
-                    <FollowButton key={props.profile._id} user={props.profile.user}/>
-                }
-            </div>
-        </div>
-    )
-}

@@ -19,6 +19,7 @@ export default function MainMenu() {
 
       <h6 className="menu_section">Personas</h6>
       <NavLink to="/browsePeople" className="menu_item btn btn-sm btn-link">Buscar Amigos</NavLink><br />
+      <NavLink to="/my-following" className="menu_item btn btn-sm btn-link">Mis Amigos</NavLink><br />
 
       <h6 className="menu_section">Publicaciones</h6>
       <NavLink to="/my-feed" className="menu_item btn btn-sm btn-link">Mi Feed</NavLink><br />

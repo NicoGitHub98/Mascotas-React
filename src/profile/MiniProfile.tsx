@@ -77,47 +77,44 @@ export default  function MiniProfile(props: any) {
     }
 
     const renderPets = () => {
-        if(pets?.length){
-            return (
-                <div ref={panelMascotas} className="card my-2 animationMascotas" hidden={!petsVisible}>
-                    <div className="card-header text-center text-bold mascotasTitle"><strong>Mis Mascotas</strong></div>
-                    <div className="card-body ">
+        return (
+            <div ref={panelMascotas} className="card my-2 animationMascotas" hidden={!petsVisible}>
+                <div className="card-header text-center text-bold mascotasTitle">
+                    <strong>Mis Mascotas</strong>
+                </div>
+                <div className="card-body ">
+                    {
+                        pets?.length ? (
                         <div className="tableFixHead">
-                        <table className="table table-sm table-hover">
-                            <thead>
-                                <tr>
-                                    <th scope="col" className="bg-secondary">Nombre</th>
-                                    <th scope="col" className="bg-secondary">Descripcion</th>
-                                    <th scope="col" className="bg-secondary">Cumpleaños</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {pets.map((pet:any,index)=>{
-                                    return (
-                                        <tr key={index}>
-                                            <th scope="row">{pet.name}</th>
-                                            <td>{pet.description}</td>
-                                            <td>{pet.birthDate.slice(0,10)}</td>
-                                        </tr>
-                                    )
-                                })}
-                            </tbody>
-                        </table>
+                            <table className="table table-sm table-hover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" className="bg-secondary">Nombre</th>
+                                        <th scope="col" className="bg-secondary">Descripcion</th>
+                                        <th scope="col" className="bg-secondary">Cumpleaños</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {pets.map((pet:any,index)=>{
+                                        return (
+                                            <tr key={index}>
+                                                <th scope="row">{pet.name}</th>
+                                                <td>{pet.description}</td>
+                                                <td>{pet.birthDate.slice(0,10)}</td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
                         </div>
-                        
-                    </div>
+                        ) : (
+                            <h5 hidden={!petsVisible} className="text-center">Aun no tengo mascotas!</h5>
+                        )
+                    }
+                    
                 </div>
-            )
-        } else {
-            return (
-                <div ref={panelMascotas} className="card my-2" hidden={!petsVisible}>
-                    <div className="card-header text-center text-bold mascotasTitle"><strong>Mis Mascotas</strong></div>
-                    <div className="card-body">
-                        <h5 hidden={!petsVisible} className="text-center">Aun no tengo mascotas!</h5>
-                    </div>
-                </div>
-            )
-        }
+            </div>
+        )
     }
 
     useEffect(()=>{

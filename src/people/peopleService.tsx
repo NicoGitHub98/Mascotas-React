@@ -17,6 +17,15 @@ export async function loadProfiles(name: string): Promise<Profile[]> {
     }
 }
 
+export async function loadFollowedProfiles(users: string[]): Promise<Profile[]> {
+    try {
+        const res = (await axios.post(environment.backendUrl + `/v1/profiles/following`,{users: users})).data as Profile[]
+        return Promise.resolve(res)
+    } catch (err) {
+        return Promise.reject(err)
+    }
+}
+
 export async function follow(userId: string): Promise<Profile> {
     try {
         const res = (await axios.post(environment.backendUrl + "/v1/users/"+userId+"/follow")).data as Profile
