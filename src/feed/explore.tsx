@@ -24,7 +24,7 @@ export default function Explore(props: RouteComponentProps) {
     const [postsToShow, setPostsToShow] = useState(2)
     
     const getPublications = async () => {
-        const publicationsAux = await feedService.exploreFeed(2)
+        const publicationsAux = await feedService.exploreFeed(10)
         setPublications(publicationsAux)
     }
 
