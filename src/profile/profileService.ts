@@ -66,7 +66,7 @@ export function getPictureUrl(id: string) {
     if (id && id.length > 0) {
         return environment.backendUrl + "/v1/image/" + id
     } else {
-        return "/assets/profile.png"
+        return "/assets/add-picture.png"
     }
 }
 

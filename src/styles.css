@@ -48,3 +48,7 @@
   position: sticky; 
   top: 0; 
 }
+
+.picture-upload:hover {
+  cursor: pointer;
+}

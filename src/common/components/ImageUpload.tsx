@@ -30,6 +30,7 @@ export default function ImageUpload(props: ImageUploadProps) {
     return (
         <div>
             <img src={props.src}
+                className="picture-upload"
                 alt=""
                 height="100"
                 onClick={imageClick} />

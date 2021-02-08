@@ -13,7 +13,7 @@ export function getPictureUrl(image: string) {
     if (image && image.length > 0) {
         return image
     } else {
-        return "/assets/profile.png"
+        return "/assets/add-picture.png"
     }
 }
 
