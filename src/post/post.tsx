@@ -54,10 +54,7 @@ export default function Post(props: postProps) {
     }
 
     const loadPetsOfPost = async () => {
-        let mascotasAux = [];
-        for (const mascotaId of props.publication.pets) {
-            mascotasAux.push(await petService.getPet(mascotaId))
-        }
+        let mascotasAux = await petService.getPets(props.publication.pets);
         setMascotas(mascotasAux)
     }
 

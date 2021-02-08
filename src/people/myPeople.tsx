@@ -3,7 +3,7 @@ import "../styles.css"
 import * as peopleService from "./peopleService"
 import { useErrorHandler } from "../common/utils/ErrorHandler"
 import { reloadCurrentUser } from "../user/userService"
-import { RouteComponentProps } from "react-router-dom"
+import { NavLink, RouteComponentProps } from "react-router-dom"
 import InfiniteScroll from "react-infinite-scroller"
 import PersonCard from "./personCard"
 
@@ -25,11 +25,24 @@ export default function MyPeople(props: RouteComponentProps) {
 
     const renderPeopleToShow = () => {
         let profilesToRender = profiles.filter((x, idx) => (idx <= profilesToShow))
-        return profilesToRender.map((profile: peopleService.Profile)=>{
+        if(profilesToRender.length){
+            return profilesToRender.map((profile: peopleService.Profile)=>{
+                return (
+                    <PersonCard key={profile._id} profile={profile}/>
+                )
+            })
+        } else {
             return (
-                <PersonCard key={profile._id} profile={profile}/>
+                <div className="text-center">
+                    Aun no sigues a nadie!
+                    <br/>
+                    <NavLink to="/browsePeople">
+                        <small>Sigue a Alguien para ver a tus seguidos</small>
+                    </NavLink>
+                </div>
             )
-        })
+        }
+        
     }
 
     useEffect(()=>{

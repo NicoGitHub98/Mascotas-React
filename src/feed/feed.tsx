@@ -50,7 +50,6 @@ export default function Feed(props: RouteComponentProps<{ profileId: string }>) 
     },[profile,currentUser])
 
     useEffect(()=>{
-        console.log("Se Ejecuta el cambio en parametro ProfileId")
         if(profile)setProfile(undefined)
         if(prevProfileId.current == props.match.params.profileId) window.scrollTo(0, 0)
     },[props.match.params.profileId])

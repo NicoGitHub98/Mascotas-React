@@ -15,7 +15,6 @@ export function FollowButton(props: any) {
 
     const checkIfFollowed = (userId: string) => {
         var index = currentUser?.following.indexOf(userId);
-        console.log(userId,index)
         setIsFollowed((index > -1) ? true : false)
     }
 
@@ -47,20 +46,12 @@ export function FollowButton(props: any) {
         if(props.user)setUser(props.user)
         if(!currentUser)await loadCurrentUser();
         if(user)checkIfFollowed(user);
-        console.log("props es: ", props)
-        console.log("user es: ",user)
-        console.log("Current user es: ",currentUser)
-        console.log("Followed es: ",currentUser?.following)
     }
 
     useEffect(()=>{
         loadInitialData();
     },[props.user,currentUser])
 
-    const test = ()=>{
-        console.log(user)
-        checkIfFollowed(user)
-    }
 
     return (
         isFollowed 

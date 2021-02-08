@@ -154,7 +154,8 @@ export default function NewPost(props: RouteComponentProps<{ id: string }>) {
 
     return (
         <div className="container">
-            <FormTitle >Nueva Publicacion</FormTitle>
+            {props.match.params.id?<FormTitle >Editar Publicación</FormTitle>:<FormTitle >Nueva Publicación</FormTitle>}
+            
             <Form>
                 <FormInput
                     label="Titulo"

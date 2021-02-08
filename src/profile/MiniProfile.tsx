@@ -33,12 +33,10 @@ export default  function MiniProfile(props: any) {
     }    
 
     const changePetFrameVisibility = ()=>{
-        console.log("Entro aca",petsVisible)
         setPetsVisible(false)
     }
 
     const togglePetsVisible = ()=>{
-        console.log(petsVisible)
         const node = panelMascotas.current as any
         if(!petsVisible){
             setPetsVisible(true)
@@ -100,7 +98,7 @@ export default  function MiniProfile(props: any) {
                                             <tr key={index}>
                                                 <th scope="row">{pet.name}</th>
                                                 <td>{pet.description}</td>
-                                                <td>{pet.birthDate.slice(0,10)}</td>
+                                                <td>{pet.birthDate?.slice(0,10)}</td>
                                             </tr>
                                         )
                                     })}

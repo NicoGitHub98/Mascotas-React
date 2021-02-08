@@ -35,9 +35,9 @@ export async function loadPet(id: string): Promise<Pet> {
     }
 }
 
-export async function getPet(id: string): Promise<Pet> {
+export async function getPets(ids: string[]): Promise<Pet> {
     try {
-        const res = (await axios.get(environment.backendUrl + "/v1/pets/" + id)).data as Pet
+        const res = (await axios.post(environment.backendUrl + "/v1/pets/from-post",{pets: ids})).data as Pet
         return Promise.resolve(res)
     } catch (err) {
         return Promise.reject(err)
