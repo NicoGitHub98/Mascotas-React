@@ -24,6 +24,7 @@ export default function Post(props: postProps) {
     const currentUser = userService.getCurrentUserAsObject()
     const [mascotas, setMascotas]: any[] = useState([]);
     const [profileInfo, setProfileInfo] = useState<any>()
+    let formatedDate = props.publication.created.split("T")
     
     const handleLike = (event: any, postId: string) => {
         if(event.target.nodeName === "IMG") event.target = event.target.parentNode
@@ -126,7 +127,7 @@ export default function Post(props: postProps) {
                 </div>
                 <div>
                     <small style={{"fontSize":12}} className="text-muted">
-                        Publicada el {props.publication.created} por <NavLink to={"/profile/"+profileInfo?._id}>{profileInfo?.name}</NavLink>
+                        Publicada el {formatedDate[0] + " a las " + formatedDate[1].slice(0,8)} por <NavLink to={"/profile/"+profileInfo?._id}>{profileInfo?.name}</NavLink>
                     </small>
                 </div>
                 <hr/>

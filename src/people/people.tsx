@@ -13,6 +13,7 @@ export default function SearchPeople(props: RouteComponentProps) {
     const [nameToSearch, setNameToSearch] = useState<string>("")
     const [profiles, setProfiles] = useState<peopleService.Profile[]>([])
     const [profilesToShow, setProfilesToShow] = useState(20)
+    const [alreadySearched, setAlreadySearched] = useState(false)
 
     const errorHandler = useErrorHandler()
 
@@ -20,6 +21,7 @@ export default function SearchPeople(props: RouteComponentProps) {
         try {
             const result = await peopleService.loadProfiles(name)
             setProfiles(result)
+            setAlreadySearched(true)
         } catch (error) {
             errorHandler.processRestValidations(error)
         }
@@ -27,11 +29,18 @@ export default function SearchPeople(props: RouteComponentProps) {
 
     const renderPeopleToShow = () => {
         let profilesToRender = profiles.filter((x, idx) => (idx <= profilesToShow))
-        return profilesToRender.map((profile: peopleService.Profile)=>{
+        if(profilesToRender.length){
+            return profilesToRender.map((profile: peopleService.Profile)=>{
+                return (
+                    <PersonCard key={profile._id} profile={profile}/>
+                )
+            })
+        } else if(alreadySearched){
             return (
-                <PersonCard key={profile._id} profile={profile}/>
+                <h4 className="text-center mt-3">No se encontró ningun usuario, intenta nuevamente con otro nombre/apellido</h4>
             )
-        })
+        }
+        
     }
 
     const handleSubmit = (event: FormEvent, nameToSearch:string) => {
