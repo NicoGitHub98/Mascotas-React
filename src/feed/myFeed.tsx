@@ -59,6 +59,8 @@ export default function MyFeed(props: RouteComponentProps) {
 
     return (
         <div style={{overflow: "hidden"}}>
+            <h3 className="text-center">Mi Feed</h3>
+            <hr/>
             <InfiniteScroll
                 className=""
                 key={0}

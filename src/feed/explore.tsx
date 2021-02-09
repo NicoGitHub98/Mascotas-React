@@ -53,6 +53,8 @@ export default function Explore(props: RouteComponentProps) {
 
     return (
         <div style={{overflowY: "hidden"}}>
+            <h3 className="text-center">Publicaciones Destacadas</h3>
+            <hr/>
             <InfiniteScroll
                 className=""
                 key={0}
